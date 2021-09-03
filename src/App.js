@@ -27,7 +27,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-
+        Minichat! 🦆
       </header>
       <section>
         { user ? <ChatRoom /> : <SignIn /> }
@@ -54,32 +54,45 @@ function SignIn() {
 // }
 
 function ChatRoom() {
+
+  const msgLimit = 100;
   const messagesRef = firestore.collection('messages');
-  const query = messagesRef.orderBy('createdAt').limit(25);
+  // const messagesRef = firestore.collection('testes');
+  const query = messagesRef.orderBy('createdAt').limit(msgLimit);
   const [messages] = useCollectionData(query, { idField: 'id' });
   const [formValue, setFormValue] = useState('');
+  const [counter, setCounter] = useState(0);
   const dummy = useRef();
 
+  const updateCounter = async(c) => {
+    await messagesRef.doc("counter").set({current: c});
+  }
+  
   const sendMessage = async(e) => {
     e.preventDefault();
-    const { uid, photoURL } = auth.currentUser;
-    await messagesRef.add({
+    const { uid, photoURL, displayName } = auth.currentUser;
+    const fetchCounter = messagesRef.doc("counter");
+    fetchCounter.get().then((c) => {
+      setCounter(c.data().current);
+    })
+    await messagesRef.doc(counter.toString()).set({
       text: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid,
-      photoURL
-    })
+      photoURL,
+      displayName
+    });
     setFormValue('');
-    dummy.current.scrollIntoView({ behavior: 'smooth' });
+    (counter === msgLimit - 1) ? updateCounter(0) : updateCounter(counter + 1);
   }
-
+  
   useEffect(() => {
-    const onMount = () => {
+    const scrollDown = () => {
       dummy.current.scrollIntoView({ behavior: 'smooth' });
     }
-    onMount();
-  }, []);
-
+    scrollDown();
+  }, [messages]);
+  
   return (
     <>
       <main>
@@ -88,21 +101,21 @@ function ChatRoom() {
       </main>
 
       <form onSubmit={ sendMessage }>
-        <input autoFocus placeholder={" < have fun!"} value={ formValue } onChange={(e) => setFormValue(e.target.value)} />
-        <button type="submit">Send</button>
+        <input autoFocus placeholder={"Envie uma mensagem"} value={ formValue } onChange={(e) => setFormValue(e.target.value)} />
+        <button type="submit">💬</button>
       </form>
     </>
   )
 }
 
 function ChatMessage(props) {
-  const { text, uid, photoURL } = props.message;
+  const { text, uid, photoURL, displayName } = props.message;
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
 
   return (
     <div className={`message ${ messageClass }`}>
       <img src={ photoURL } alt="avatar" />
-      <p>{ text }</p>
+      <p>{ displayName }: { text }</p>
     </div>
   )
 }
