@@ -68,19 +68,25 @@ function ChatRoom() {
     await messagesRef.doc("counter").set({current: c});
   }
   
-  const sendMessage = async (e) => {
+  const sendMessage = (e) => {
     e.preventDefault();
     const { uid, photoURL, displayName } = auth.currentUser;
-    await messagesRef.doc("counter").get().then((c) => {
-      setCounter(c.data().current);
-    })
-    await messagesRef.doc(counter.toString()).set({
-      text: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      photoURL,
-      displayName
-    });
+    const fetchCounter = (callback) => {
+      messagesRef.doc("counter").get().then((c) => {
+        setCounter(c.data().current);
+      })
+      callback();
+    };
+    const setMessage = async () => {
+      await messagesRef.doc(counter.toString()).set({
+        text: formValue,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        uid,
+        photoURL,
+        displayName
+      })
+    };
+    fetchCounter(setMessage);
     setFormValue('');
     (counter === msgLimit - 1) ? updateCounter() : updateCounter(counter + 1);
   }
@@ -91,6 +97,12 @@ function ChatRoom() {
     }
     scrollDown();
   }, [messages]);
+
+  useEffect(() => {
+    messagesRef.doc("counter").get().then((c) => {
+      setCounter(c.data().current);
+    })
+  }, []);
   
   return (
     <>
