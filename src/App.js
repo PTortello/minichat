@@ -27,9 +27,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div class="grid-container">
+        <div className="grid-container">
           <div>minichat! 🦆</div>
-          <div class="grid-right"><SignOut /></div>
+          <div className="grid-right"><SignOut /></div>
         </div>
       </header>
       <section>
@@ -45,36 +45,33 @@ function SignIn() {
     auth.signInWithPopup(provider);
   }
   return (
-    <button class="sign-in" onClick={ signInWithGoogle }>Sign in with Google</button>
+    <button className="sign-in" onClick={ signInWithGoogle }>Entrar com Google</button>
   )
 }
 
 function SignOut() {
   return auth.currentUser && (
-    <button class="sign-out" onClick={ () => auth.signOut() }>Sair</button>
+    <button className="sign-out" onClick={ () => auth.signOut() }>Sair</button>
   )
 }
 
 function ChatRoom() {
-
   const msgLimit = 100;
   const messagesRef = firestore.collection('messages');
-  // const messagesRef = firestore.collection('testes');
   const query = messagesRef.orderBy('createdAt').limit(msgLimit);
   const [messages] = useCollectionData(query, { idField: 'id' });
   const [formValue, setFormValue] = useState('');
   const [counter, setCounter] = useState(0);
   const dummy = useRef();
 
-  const updateCounter = async(c) => {
+  const updateCounter = async (c = 0) => {
     await messagesRef.doc("counter").set({current: c});
   }
   
-  const sendMessage = async(e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
     const { uid, photoURL, displayName } = auth.currentUser;
-    const fetchCounter = messagesRef.doc("counter");
-    fetchCounter.get().then((c) => {
+    await messagesRef.doc("counter").get().then((c) => {
       setCounter(c.data().current);
     })
     await messagesRef.doc(counter.toString()).set({
@@ -85,7 +82,7 @@ function ChatRoom() {
       displayName
     });
     setFormValue('');
-    (counter === msgLimit - 1) ? updateCounter(0) : updateCounter(counter + 1);
+    (counter === msgLimit - 1) ? updateCounter() : updateCounter(counter + 1);
   }
   
   useEffect(() => {
@@ -101,9 +98,14 @@ function ChatRoom() {
         {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
         <div ref={ dummy }></div>
       </main>
-
       <form onSubmit={ sendMessage }>
-        <input autoFocus placeholder={"Envie uma mensagem"} value={ formValue } onChange={(e) => setFormValue(e.target.value)} />
+        <input
+          autoFocus
+          maxLength="200"
+          placeholder={"Envie uma mensagem"}
+          value={ formValue }
+          onChange={(e) => setFormValue(e.target.value)}
+        />
         <button type="submit">💬</button>
       </form>
     </>
