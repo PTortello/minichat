@@ -27,7 +27,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        Minichat! 🦆
+        <div class="grid-container">
+          <div>minichat! 🦆</div>
+          <div class="grid-right"><SignOut /></div>
+        </div>
       </header>
       <section>
         { user ? <ChatRoom /> : <SignIn /> }
@@ -41,17 +44,16 @@ function SignIn() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider);
   }
-
   return (
-    <button onClick={ signInWithGoogle }>Sign in with Google</button>
+    <button class="sign-in" onClick={ signInWithGoogle }>Sign in with Google</button>
   )
 }
 
-// function SignOut() {
-//   return auth.currentUser && (
-//     <button onClick={ () => auth.signOut() }>Sign Out</button>
-//   )
-// }
+function SignOut() {
+  return auth.currentUser && (
+    <button class="sign-out" onClick={ () => auth.signOut() }>Sair</button>
+  )
+}
 
 function ChatRoom() {
 

@@ -28,6 +28,16 @@ body {
   border-bottom: 2px solid #f7d597;
 }
 
+.grid-container {
+  display: grid;
+  width: 100%;
+}
+
+.grid-right {
+  position: absolute;
+  right: 30px;
+}
+
 .App section {
   display: flex;
   flex-direction: column;
@@ -69,12 +79,6 @@ form {
   border-top: 2px solid #f7d597;
 }
 
-form button {
-  width: 20%;
-  background-color: #F2B950;
-}
-
-
 input {
   line-height: 1.5;
   width: 100%;
@@ -86,33 +90,42 @@ input {
   padding: 0 10px;
 }
 
-button {
-  background-color: #282c34; /* Green */
+form button {
+  width: 20%;
+  background-color: #F2B950;
+  border: none;
+  padding: 16px 16px;
+  cursor: pointer;
+  font-size: 1.75rem;
+}
+
+.sign-out {
+  font-size: 1.1rem;
+}
+
+.sign-in, .sign-out {
+  background-color: #F2B950;
   border: none;
   color: white;
-  padding: 16px 16px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
-  font-size: 1.75rem;
+}
+
+.sign-in {
+  padding: 16px 16px;
+  font-size: 1.5rem;
+}
+
+.sign-in:hover, .sign-out:hover {
+  color: #f7d597;
 }
 
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-
-
-.sign-in {
-  color: #282c34;
-  background: white;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-
-
 
 ul, li {
   text-align: left;
@@ -135,7 +148,6 @@ p {
   align-items: center;
   word-break: break-word;
 }
-
 
 .sent {
   flex-direction: row-reverse;
