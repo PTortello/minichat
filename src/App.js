@@ -55,26 +55,40 @@ function SignOut() {
 }
 
 function ChatRoom() {
-  const msgLimit = 100;
   const messagesRef = firestore.collection('messages');
-  const query = messagesRef.orderBy('createdAt').limit(msgLimit);
+  const query = messagesRef.orderBy('timestamp').limit(1000);
   const [messages] = useCollectionData(query, { idField: 'id' });
   const [formValue, setFormValue] = useState('');
   const dummy = useRef();
+
+  const makeRoom = () => {
+    const cutoff = new Date(Date.now() - 10 * 60 * 1000);
+    messagesRef.get().then((res) => {
+      res.forEach((msg) => {
+        const {timestamp} = msg.data();
+        if (timestamp?.toDate() < cutoff) {
+          msg.ref.delete();
+        }
+      });
+    });
+  };
 
   const sendMessage = async (e) => {
     e.preventDefault();
     if (formValue.length > 0) {
       const { uid, photoURL, displayName } = auth.currentUser;
-      await messagesRef.add({
+      const fetchTime = firebase.firestore.Timestamp.now().toDate().toString().slice(4, 24);
+      const logtime = fetchTime.slice(12, 20) + ' ' + fetchTime.slice(0, 11);
+      await messagesRef.doc(displayName + '-' + logtime).set({
         text: formValue,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
         photoURL,
         displayName
       })
       setFormValue('');
     }
+    makeRoom();
   };
   
   useEffect(() => {
@@ -82,7 +96,7 @@ function ChatRoom() {
       dummy.current.scrollIntoView({ behavior: 'smooth' });
     }
     scrollDown();
-  }, [messages]);
+  }, [messagesRef]);
 
   return (
     <>
