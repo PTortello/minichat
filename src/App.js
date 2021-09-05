@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 
-// firebase sdk
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -61,35 +60,22 @@ function ChatRoom() {
   const query = messagesRef.orderBy('createdAt').limit(msgLimit);
   const [messages] = useCollectionData(query, { idField: 'id' });
   const [formValue, setFormValue] = useState('');
-  const [counter, setCounter] = useState(0);
   const dummy = useRef();
 
-  const updateCounter = async (c = 0) => {
-    await messagesRef.doc("counter").set({current: c});
-  }
-  
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
-    const { uid, photoURL, displayName } = auth.currentUser;
-    const fetchCounter = (callback) => {
-      messagesRef.doc("counter").get().then((c) => {
-        setCounter(c.data().current);
-      })
-      callback();
-    };
-    const setMessage = async () => {
-      await messagesRef.doc(counter.toString()).set({
+    if (formValue.length > 0) {
+      const { uid, photoURL, displayName } = auth.currentUser;
+      await messagesRef.add({
         text: formValue,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
         photoURL,
         displayName
       })
-    };
-    fetchCounter(setMessage);
-    setFormValue('');
-    (counter === msgLimit - 1) ? updateCounter() : updateCounter(counter + 1);
-  }
+      setFormValue('');
+    }
+  };
   
   useEffect(() => {
     const scrollDown = () => {
@@ -98,12 +84,6 @@ function ChatRoom() {
     scrollDown();
   }, [messages]);
 
-  useEffect(() => {
-    messagesRef.doc("counter").get().then((c) => {
-      setCounter(c.data().current);
-    })
-  }, []);
-  
   return (
     <>
       <main>
