@@ -59,18 +59,23 @@ function ChatRoom() {
   const query = messagesRef.orderBy('timestamp').limit(1000);
   const [messages] = useCollectionData(query, { idField: 'id' });
   const [formValue, setFormValue] = useState('');
+  const [msgCounter, setMsgCounter] = useState(0);
   const dummy = useRef();
 
   const makeRoom = () => {
-    const cutoff = new Date(Date.now() - 10 * 60 * 1000);
-    messagesRef.get().then((res) => {
-      res.forEach((msg) => {
-        const {timestamp} = msg.data();
-        if (timestamp?.toDate() < cutoff) {
-          msg.ref.delete();
-        }
+    if (msgCounter < 10) {
+      setMsgCounter(msgCounter + 1);
+    } else {
+      const cutoff = new Date(Date.now() - 10 * 60 * 1000);
+      messagesRef.get().then((res) => {
+        res.forEach((msg) => {
+          const {timestamp} = msg.data();
+          if (timestamp?.toDate() < cutoff) {
+            msg.ref.delete();
+          }
+        });
       });
-    });
+    }
   };
 
   const sendMessage = async (e) => {
