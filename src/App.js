@@ -8,14 +8,16 @@ import 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
-firebase.initializeApp({
+const config = {
   apiKey: "AIzaSyBrbQbnUZmYNLtp4raiFoZZCiC3b1IbVhU",
   authDomain: "minichat-jvt.firebaseapp.com",
   projectId: "minichat-jvt",
   storageBucket: "minichat-jvt.appspot.com",
   messagingSenderId: "394826412413",
   appId: "1:394826412413:web:fb270f8d153a6945455c14"
-});
+};
+
+firebase.apps.length ? firebase.app() : firebase.initializeApp(config);
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -39,18 +41,23 @@ function App() {
 }
 
 function SignIn() {
-  const signInWithGoogle = () => {
+  const handleClick = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider);
   }
+
   return (
-    <button className="sign-in" onClick={ signInWithGoogle }>Entrar com Google</button>
+    <button className="sign-in" onClick={ handleClick }>
+      Entrar com Google
+    </button>
   )
 }
 
 function SignOut() {
   return auth.currentUser && (
-    <button className="sign-out" onClick={ () => auth.signOut() }>Sair</button>
+    <button className="sign-out" onClick={ () => auth.signOut() }>
+      Sair
+    </button>
   )
 }
 
@@ -82,7 +89,8 @@ function ChatRoom() {
     e.preventDefault();
     if (formValue.length > 0) {
       const { uid, photoURL, displayName } = auth.currentUser;
-      const fetchTime = firebase.firestore.Timestamp.now().toDate().toString().slice(4, 24);
+      const fetchTime = firebase.firestore.Timestamp
+        .now().toDate().toString().slice(4, 24);
       const logtime = fetchTime.slice(12, 20) + ' ' + fetchTime.slice(0, 11);
       await messagesRef.doc(displayName + '-' + logtime).set({
         text: formValue,
@@ -106,7 +114,7 @@ function ChatRoom() {
   return (
     <>
       <main>
-        {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+        {messages?.map(msg => <ChatMessage key={msg.id} message={msg} />)}
         <div ref={ dummy }></div>
       </main>
       <form onSubmit={ sendMessage }>
@@ -115,7 +123,7 @@ function ChatRoom() {
           maxLength="200"
           placeholder={"Envie uma mensagem"}
           value={ formValue }
-          onChange={(e) => setFormValue(e.target.value)}
+          onChange={ (e) => setFormValue(e.target.value) }
         />
         <button type="submit">💬</button>
       </form>
@@ -129,8 +137,11 @@ function ChatMessage(props) {
 
   return (
     <div className={`message ${ messageClass }`}>
-      <img src={ photoURL } alt="avatar" />
-      <p>{ displayName }: { text }</p>
+      <img className="avatar" src={ photoURL } alt="avatar" />
+      <p>
+        { messageClass === 'received' && <span>{ displayName }: </span> }
+        { text }
+      </p>
     </div>
   )
 }

@@ -127,26 +127,20 @@ button:disabled {
   cursor: not-allowed;
 }
 
-ul, li {
-  text-align: left;
-  list-style: none;
+.message {
+  display: flex;
+  align-items: center;
+  word-break: break-word;
 }
 
-p {
+.message p {
   max-width: 500px;
   margin-bottom: 12px;
   line-height: 24px;
   padding: 10px 20px;
   border-radius: 25px;
   position: relative;
-  color: white;
-  text-align: center;
-}
-
-.message {
-  display: flex;
-  align-items: center;
-  word-break: break-word;
+  text-align: left;
 }
 
 .sent {
@@ -154,19 +148,20 @@ p {
 }
 
 .sent p {
-  color: black;
-  font-weight: 500;
   /* background: #0b93f6; */
   background: #6DDAF2;
+  color: black;
+  font-weight: 500;
   align-self: flex-end;
 }
+
 .received p {
   background: #f7d597;;
   color: black;
   font-weight: 500;
 }
 
-img {
+.avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
