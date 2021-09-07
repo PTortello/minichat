@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/minichat/static/css/main.47b1106d.chunk.css",
-    "main.js": "/minichat/static/js/main.8a01ed90.chunk.js",
-    "main.js.map": "/minichat/static/js/main.8a01ed90.chunk.js.map",
+    "main.css": "/minichat/static/css/main.1295ef7c.chunk.css",
+    "main.js": "/minichat/static/js/main.3891a67b.chunk.js",
+    "main.js.map": "/minichat/static/js/main.3891a67b.chunk.js.map",
     "runtime-main.js": "/minichat/static/js/runtime-main.f59377a8.js",
     "runtime-main.js.map": "/minichat/static/js/runtime-main.f59377a8.js.map",
-    "static/js/2.88359173.chunk.js": "/minichat/static/js/2.88359173.chunk.js",
-    "static/js/2.88359173.chunk.js.map": "/minichat/static/js/2.88359173.chunk.js.map",
+    "static/js/2.fe2675a9.chunk.js": "/minichat/static/js/2.fe2675a9.chunk.js",
+    "static/js/2.fe2675a9.chunk.js.map": "/minichat/static/js/2.fe2675a9.chunk.js.map",
     "static/js/3.e645e602.chunk.js": "/minichat/static/js/3.e645e602.chunk.js",
     "static/js/3.e645e602.chunk.js.map": "/minichat/static/js/3.e645e602.chunk.js.map",
     "index.html": "/minichat/index.html",
-    "static/css/main.47b1106d.chunk.css.map": "/minichat/static/css/main.47b1106d.chunk.css.map",
-    "static/js/2.88359173.chunk.js.LICENSE.txt": "/minichat/static/js/2.88359173.chunk.js.LICENSE.txt"
+    "static/css/main.1295ef7c.chunk.css.map": "/minichat/static/css/main.1295ef7c.chunk.css.map",
+    "static/js/2.fe2675a9.chunk.js.LICENSE.txt": "/minichat/static/js/2.fe2675a9.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f59377a8.js",
-    "static/js/2.88359173.chunk.js",
-    "static/css/main.47b1106d.chunk.css",
-    "static/js/main.8a01ed90.chunk.js"
+    "static/js/2.fe2675a9.chunk.js",
+    "static/css/main.1295ef7c.chunk.css",
+    "static/js/main.3891a67b.chunk.js"
   ]
 }
